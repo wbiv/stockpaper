@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effort</title>
+    
+    <!-- Favicon and Icon Meta Tags -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    <meta name="theme-color" content="#FDFCF9">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://createwitheffort.com">
+    <meta property="og:title" content="Effort - Let's show your work">
+    <meta property="og:description" content="Humans like things made by other humans — physical and digital. We're building tools to help digital creators document and share the process of the work.">
+    <meta property="og:image" content="https://createwitheffort.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Effort - Let's show your work">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://createwitheffort.com">
+    <meta name="twitter:title" content="Effort - Let's show your work">
+    <meta name="twitter:description" content="Humans like things made by other humans — physical and digital. We're building tools to help digital creators document and share the process of the work.">
+    <meta name="twitter:image" content="https://createwitheffort.com/og-image.jpg">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="description" content="Humans like things made by other humans — physical and digital. We're building tools to help digital creators document and share the process of the work.">
+    <meta name="keywords" content="creativity, writing, digital creators, handmade, human work, effort">
+    <meta name="author" content="Effort">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FDFCF9;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-gold: #B8860B;
+            --accent-warm: #8B4513;
+            --border-light: #E8E3DA;
+            --surface-elevated: #FFFFFF;
+            --shadow-subtle: rgba(0, 0, 0, 0.04);
+            --shadow-elevated: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Subtle texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(184, 134, 11, 0.003) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.002) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(184, 134, 11, 0.003) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem 0 1rem;
+            text-align: left;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-gold) 50%, var(--text-primary) 100%);
+            background-size: 200% 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 24px;
+            height: 1px;
+            background: var(--accent-gold);
+            opacity: 0.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 2rem 0 3rem;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .hero-work {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+            position: relative;
+            display: inline-block;
+            margin-left: 0.15em;
+        }
+
+        .hero-work::after {
+            content: '';
+            position: absolute;
+            bottom: 0.05em;
+            left: -0.05em;
+            right: -0.05em;
+            height: 2px;
+            background: var(--accent-gold);
+            opacity: 0.3;
+            border-radius: 1px;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: expandLine 1s ease-out 1.2s forwards;
+        }
+
+        @keyframes expandLine {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* Manifesto Section */
+        .manifesto {
+            padding: 0 0 4rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .manifesto-content {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .manifesto-content::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            opacity: 0.4;
+        }
+
+        .manifesto-content p {
+            margin-bottom: 2rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .manifesto-content p:last-child {
+            margin-bottom: 0;
+            font-weight: 500;
+            position: relative;
+            margin-top: 3rem;
+            font-size: 1.3rem;
+            line-height: 1.7;
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .manifesto-content p:last-child::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            opacity: 0.6;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 0 0 4rem;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .cta-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            letter-spacing: 0.01em;
+        }
+
+        .email-form {
+            display: inline-flex;
+            background: var(--surface-elevated);
+            border: none;
+            border-radius: 12px;
+            padding: 6px;
+            box-shadow: 0 4px 16px var(--shadow-subtle);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-form:hover {
+            box-shadow: 0 8px 32px var(--shadow-elevated);
+            transform: translateY(-2px);
+        }
+
+        .email-form:focus-within {
+            box-shadow: 0 8px 32px var(--shadow-elevated);
+        }
+
+        .email-input {
+            border: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+            padding: 1rem 1.5rem;
+            width: 280px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border: none;
+        }
+
+        .email-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .submit-btn {
+            background: var(--text-primary);
+            color: var(--surface-elevated);
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2a2a2a;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* PS Note */
+        .ps-note {
+            padding: 2rem 0 6rem;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .ps-note-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            max-width: 450px;
+            margin: 0 auto;
+            position: relative;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .ps-note-content::before {
+            content: '';
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 1px;
+            background: var(--border-light);
+            opacity: 0.5;
+        }
+
+        .ps-note-content strong {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .manifesto-content {
+                font-size: 1.125rem;
+                line-height: 1.7;
+            }
+            
+            .email-form {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+            
+            .email-input {
+                width: auto;
+                border-radius: 0;
+            }
+            
+            .submit-btn {
+                border-radius: 0 0 6px 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.4rem;
+            }
+            
+            .manifesto-content {
+                font-size: 1.0625rem;
+                padding: 0 0.5rem;
+            }
+            
+            .cta-title {
+                font-size: 1rem;
+            }
+            
+            .ps-note-content {
+                font-size: 0.8125rem;
+                padding: 0 0.5rem;
+            }
+        }
+
+        /* Micro-interactions */
+        .manifesto-content p:hover {
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .logo:hover::after {
+            width: 32px;
+            opacity: 1;
+        }
+
+        .logo:hover {
+            animation-duration: 1s;
+        }
+
+        /* Focus states for accessibility */
+        .submit-btn:focus {
+            outline: 2px solid var(--text-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="#" class="logo">Effort</a>
+        </header>
+
+        <section class="hero">
+            <h1 class="hero-title">Let's show your <span class="hero-work">work</span></h1>
+        </section>
+
+        <section class="manifesto">
+            <div class="manifesto-content">
+                <p>Automated manufacturing didn't replace handmade goods—it made them more special. It turns out humans just like things that another human spent finite time, energy, care, and experience crafting, whether it's a wallet, baked good, or piece of art. Handmade objects resonate because they carry intention; they carry a narrative.</p>
+                
+                <p>A similar pattern is playing out with digital goods. Automation is becoming increasingly adept at replicating the output of digital human work, but it can't ever replace the human input. And that's the part that makes human work valuable.</p>
+                
+                <p>Until now, human input has been difficult to demonstrate digitally, so we're setting out to change that. Beginning with writers, we're building a workshop of tools that help digital creators document and display the process and effort that went into producing a digital work, making it more unique and valuable to consumers.</p>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2 class="cta-title">Whether you're a creator or a consumer, we'd love for you to join us.</h2>
+            <form class="email-form" id="emailForm" name="early-access" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                <input type="hidden" name="bot-field" />
+                <input type="hidden" name="form-name" value="early-access" />
+                <input 
+                    type="email" 
+                    class="email-input" 
+                    name="email"
+                    placeholder="Sign up for early access" 
+                    required
+                    id="emailInput"
+                >
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </form>
+        </section>
+
+        <section class="ps-note">
+            <div class="ps-note-content">
+                <strong>P.S.</strong> AI tools are just that—tools. We don't discourage their use because we're not trying to detect whether AI was used in a project. Handmade has never meant that creators can't use tools, but it does mean that there was a human making decisions and applying creativity throughout the process.
+            </div>
+        </section>
+    </div>
+
+    
+<script>
+document.getElementById('emailForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.submit-btn');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Joining...';
+
+    try {
+        const res = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString(),
+        });
+
+        if (res.ok) {
+            form.style.background = 'transparent';
+            form.style.boxShadow = 'none';
+            form.style.padding = '0';
+            form.innerHTML = `
+                <p style="font-size: 1.25rem; color: var(--text-secondary); margin: 0; padding: 1.5rem 0; font-family: 'Inter', sans-serif; font-weight: 400; opacity: 0; transition: opacity 0.3s ease;" id="thankYouMessage">
+                    We look forward to being in touch.
+                </p>
+            `;
+            
+            // Fade in the message
+            setTimeout(() => {
+                document.getElementById('thankYouMessage').style.opacity = '1';
+            }, 100);
+            
+            // Reset form after 5 seconds
+            setTimeout(() => {
+                const thankYouMsg = document.getElementById('thankYouMessage');
+                if (thankYouMsg) {
+                    thankYouMsg.style.opacity = '0';
+                    setTimeout(() => {
+                        form.style.background = 'var(--surface-elevated)';
+                        form.style.boxShadow = '0 4px 16px var(--shadow-subtle)';
+                        form.style.padding = '6px';
+                        form.innerHTML = `
+                            <input type="hidden" name="bot-field" />
+                            <input type="hidden" name="form-name" value="early-access" />
+                            <input 
+                                type="email" 
+                                class="email-input" 
+                                name="email"
+                                placeholder="Sign up for early access" 
+                                required
+                                id="emailInput"
+                            >
+                            <button type="submit" class="submit-btn">Sign Up</button>
+                        `;
+                    }, 300);
+                }
+            }, 5000);
+        } else {
+            submitBtn.textContent = 'Something went wrong';
+        }
+    } catch (err) {
+        submitBtn.textContent = 'Error';
+    }
+});
+</script>
+
+</body>
+</html>
