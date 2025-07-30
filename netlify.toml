@@ -1,0 +1,33 @@
+[build]
+  publish = "."
+  command = "echo 'Static site - no build needed'"
+
+[[redirects]]
+  from = "/demo/projects/*"
+  to = "/projects/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/demo/public/*"
+  to = "/public/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/demo/sessions/*"
+  to = "/sessions/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/projects"
+  to = "/projects/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/public"
+  to = "/public/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/sessions"
+  to = "/sessions/index.html"
+  status = 200
