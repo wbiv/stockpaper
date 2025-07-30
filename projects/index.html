@@ -38,6 +38,24 @@
             line-height: 1.6;
         }
 
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.2rem;
+            color: var(--ink-light);
+        }
+
+        .auth-required {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
         .header {
             background: var(--paper-aged);
             border-bottom: 2px solid var(--leather-brown);
@@ -106,6 +124,22 @@
             color: white;
         }
 
+        .btn-outline {
+            background: transparent;
+            color: var(--ink-medium);
+            border: 1px solid var(--paper-edge);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--paper-aged);
+            border-color: var(--leather-brown);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -168,6 +202,9 @@
             background: var(--paper-aged);
             padding: 20px 24px;
             border-bottom: 1px solid var(--paper-edge);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .card-title {
@@ -208,7 +245,7 @@
 
         .project-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 12px;
         }
@@ -245,7 +282,6 @@
             border-radius: 12px;
             font-size: 0.75rem;
             font-weight: 600;
-            margin-left: auto;
         }
 
         .status-active {
@@ -378,197 +414,678 @@
             font-size: 0.9rem;
             color: var(--ink-medium);
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            border: 2px solid var(--leather-brown);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--ink-black);
+            margin-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--ink-dark);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--paper-edge);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--leather-brown);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: var(--ink-medium);
+            border: 1px solid var(--paper-edge);
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--paper-aged);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div>
-                <h1 class="welcome">Welcome back, Sarah</h1>
-                <p class="subtitle">Your creative workspace is ready</p>
-            </div>
-            <div class="header-actions">
-                <a href="#" class="btn-primary">+ New Session</a>
-                <a href="#" class="btn-secondary">Publishing Dashboard</a>
-            </div>
-        </div>
+    <!-- Loading State -->
+    <div id="loadingState" class="loading">
+        <div>Loading your Digital Atelier...</div>
     </div>
 
-    <div class="container">
-        <!-- Overview Stats -->
-        <div class="stats-overview">
-            <div class="stat-card">
-                <span class="stat-number">47</span>
-                <span class="stat-label">Total Sessions</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">23</span>
-                <span class="stat-label">Published Pieces</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">156h</span>
-                <span class="stat-label">Time Invested</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">2.8k</span>
-                <span class="stat-label">Reader Views</span>
+    <!-- Auth Required State -->
+    <div id="authRequired" class="auth-required" style="display: none;">
+        <h2>Welcome to Your Digital Atelier</h2>
+        <p style="margin: 16px 0;">Please sign in to access your creator dashboard</p>
+        <a href="/auth.html" class="btn-primary">Sign In</a>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" style="display: none;">
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1 class="welcome">Welcome back, <span id="userName">Creator</span></h1>
+                    <p class="subtitle">Your creative workspace is ready</p>
+                </div>
+                <div class="header-actions">
+                    <button id="newSessionBtn" class="btn-primary">+ New Session</button>
+                    <a href="/publishing.html" class="btn-secondary">Publishing Dashboard</a>
+                    <button id="signOutBtn" class="btn-outline">Sign Out</button>
+                </div>
             </div>
         </div>
 
-        <div class="dashboard-grid">
-            <!-- Current Projects -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Current Projects</h2>
-                    <p class="card-subtitle">Your active creative work</p>
+        <div class="container">
+            <!-- Overview Stats -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <span id="totalSessions" class="stat-number">-</span>
+                    <span class="stat-label">Total Sessions</span>
                 </div>
-                <div class="card-content">
-                    <div class="project-item">
-                        <div class="project-header">
-                            <div>
-                                <div class="project-title">Weekly Newsletter</div>
-                                <div class="project-meta">
-                                    <span>Started 3 weeks ago</span>
-                                    <span>Last session: 2 hours ago</span>
-                                </div>
-                            </div>
-                            <div class="status-badge status-active">Active</div>
-                        </div>
-                        <div class="project-stats">
-                            <span class="project-stat">📝 12 sessions</span>
-                            <span class="project-stat">📖 8 published</span>
-                            <span class="project-stat">⏱️ 23h 45m total</span>
-                            <span class="project-stat">👥 342 reader views</span>
-                        </div>
-                    </div>
-
-                    <div class="project-item">
-                        <div class="project-header">
-                            <div>
-                                <div class="project-title">Creator Economy Research</div>
-                                <div class="project-meta">
-                                    <span>Started 1 week ago</span>
-                                    <span>Last session: Yesterday</span>
-                                </div>
-                            </div>
-                            <div class="status-badge status-published">Published</div>
-                        </div>
-                        <div class="project-stats">
-                            <span class="project-stat">📝 6 sessions</span>
-                            <span class="project-stat">📖 3 published</span>
-                            <span class="project-stat">⏱️ 18h 20m total</span>
-                            <span class="project-stat">👥 89 reader views</span>
-                        </div>
-                    </div>
-
-                    <div class="project-item">
-                        <div class="project-header">
-                            <div>
-                                <div class="project-title">Personal Essays Collection</div>
-                                <div class="project-meta">
-                                    <span>Started 2 months ago</span>
-                                    <span>Last session: 3 days ago</span>
-                                </div>
-                            </div>
-                            <div class="status-badge status-draft">Draft</div>
-                        </div>
-                        <div class="project-stats">
-                            <span class="project-stat">📝 15 sessions</span>
-                            <span class="project-stat">📖 2 published</span>
-                            <span class="project-stat">⏱️ 31h 15m total</span>
-                            <span class="project-stat">👥 156 reader views</span>
-                        </div>
-                    </div>
+                <div class="stat-card">
+                    <span id="publishedPieces" class="stat-number">-</span>
+                    <span class="stat-label">Published Pieces</span>
+                </div>
+                <div class="stat-card">
+                    <span id="timeInvested" class="stat-number">-</span>
+                    <span class="stat-label">Time Invested</span>
+                </div>
+                <div class="stat-card">
+                    <span id="readerViews" class="stat-number">-</span>
+                    <span class="stat-label">Reader Views</span>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div>
-                <!-- Recent Activity -->
+            <div class="dashboard-grid">
+                <!-- Current Projects -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Recent Activity</h3>
-                        <p class="card-subtitle">Your creative journey</p>
+                        <div>
+                            <h2 class="card-title">Current Projects</h2>
+                            <p class="card-subtitle">Your active creative work</p>
+                        </div>
+                        <button id="newProjectBtn" class="btn-outline">+ New Project</button>
                     </div>
                     <div class="card-content">
-                        <div class="recent-activity">
-                            <div class="activity-item">
-                                <div class="activity-icon">✍️</div>
-                                <div class="activity-content">
-                                    <div class="activity-action">Completed "The Messy Middle" session</div>
-                                    <div class="activity-time">2 hours ago</div>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">🌐</div>
-                                <div class="activity-content">
-                                    <div class="activity-action">Published "Creative Process Insights"</div>
-                                    <div class="activity-time">Yesterday</div>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">📚</div>
-                                <div class="activity-content">
-                                    <div class="activity-action">Added 3 research articles</div>
-                                    <div class="activity-time">2 days ago</div>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon">🎤</div>
-                                <div class="activity-content">
-                                    <div class="activity-action">Recorded voice memo on authenticity</div>
-                                    <div class="activity-time">3 days ago</div>
-                                </div>
-                            </div>
+                        <div id="projectsList">
+                            <!-- Projects will be loaded here -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Insights -->
-                <div class="insights-panel">
-                    <h3 class="insights-title">This Week's Insights</h3>
-                    <div class="insight-item">
-                        <span class="insight-icon">📈</span>
-                        <span class="insight-text">Your published sessions averaged 89% longer reading time</span>
+                <!-- Sidebar -->
+                <div>
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Recent Activity</h3>
+                                <p class="card-subtitle">Your creative journey</p>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div id="recentActivity" class="recent-activity">
+                                <!-- Activity will be loaded here -->
+                            </div>
+                        </div>
                     </div>
-                    <div class="insight-item">
-                        <span class="insight-icon">⏰</span>
-                        <span class="insight-text">Most productive writing time: 9-11 AM</span>
-                    </div>
-                    <div class="insight-item">
-                        <span class="insight-icon">💡</span>
-                        <span class="insight-text">Research-heavy sessions lead to 40% more engagement</span>
-                    </div>
-                </div>
 
-                <!-- Quick Actions -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Quick Actions</h3>
+                    <!-- Insights -->
+                    <div class="insights-panel">
+                        <h3 class="insights-title">This Week's Insights</h3>
+                        <div class="insight-item">
+                            <span class="insight-icon">📈</span>
+                            <span class="insight-text">Building your creative portfolio with intention</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-icon">⏰</span>
+                            <span class="insight-text">Consistent creative practice builds stronger work</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-icon">💡</span>
+                            <span class="insight-text">Research sessions add depth to your final pieces</span>
+                        </div>
                     </div>
-                    <div class="card-content">
-                        <div class="quick-actions">
-                            <a href="#" class="quick-action">
-                                <span class="quick-action-icon">📝</span>
-                                <span>Start Writing</span>
-                            </a>
-                            <a href="#" class="quick-action">
-                                <span class="quick-action-icon">📚</span>
-                                <span>Research Session</span>
-                            </a>
-                            <a href="#" class="quick-action">
-                                <span class="quick-action-icon">🌐</span>
-                                <span>Publish Work</span>
-                            </a>
-                            <a href="#" class="quick-action">
-                                <span class="quick-action-icon">📊</span>
-                                <span>View Analytics</span>
-                            </a>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Quick Actions</h3>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="quick-actions">
+                                <a href="/sessions/" class="quick-action">
+                                    <span class="quick-action-icon">📝</span>
+                                    <span>Start Writing</span>
+                                </a>
+                                <a href="/sessions/" class="quick-action">
+                                    <span class="quick-action-icon">📚</span>
+                                    <span>Research Session</span>
+                                </a>
+                                <a href="/publishing.html" class="quick-action">
+                                    <span class="quick-action-icon">🌐</span>
+                                    <span>Publish Work</span>
+                                </a>
+                                <a href="/analytics.html" class="quick-action">
+                                    <span class="quick-action-icon">📊</span>
+                                    <span>View Analytics</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- New Project Modal -->
+    <div id="newProjectModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Project</h2>
+                <p style="color: var(--ink-light);">Start a new creative endeavor</p>
+            </div>
+            <form id="newProjectForm">
+                <div class="form-group">
+                    <label for="projectName" class="form-label">Project Name</label>
+                    <input type="text" id="projectName" class="form-input" placeholder="e.g., Weekly Newsletter, Personal Essays..." required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription" class="form-label">Description (Optional)</label>
+                    <textarea id="projectDescription" class="form-input form-textarea" placeholder="What is this project about? What are your goals?"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelProject" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.7/umd/supabase.min.js"></script>
+    
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUser = null;
+        let userProjects = [];
+        let userSessions = [];
+        let userStats = {};
+
+        // DOM Elements
+        const loadingState = document.getElementById('loadingState');
+        const authRequired = document.getElementById('authRequired');
+        const dashboard = document.getElementById('dashboard');
+        const userName = document.getElementById('userName');
+        const newSessionBtn = document.getElementById('newSessionBtn');
+        const newProjectBtn = document.getElementById('newProjectBtn');
+        const signOutBtn = document.getElementById('signOutBtn');
+        const newProjectModal = document.getElementById('newProjectModal');
+        const newProjectForm = document.getElementById('newProjectForm');
+        const cancelProject = document.getElementById('cancelProject');
+
+        // Initialize app
+        async function init() {
+            try {
+                // Check authentication
+                const { data: { user } } = await supabase.auth.getUser();
+                
+                if (!user) {
+                    showAuthRequired();
+                    return;
+                }
+
+                currentUser = user;
+                await loadUserData();
+                showDashboard();
+                
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showAuthRequired();
+            }
+        }
+
+        async function loadUserData() {
+            try {
+                // Load user profile
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                // Create profile if it doesn't exist
+                if (!profile) {
+                    await supabase
+                        .from('profiles')
+                        .insert([{
+                            id: currentUser.id,
+                            email: currentUser.email,
+                            display_name: currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]
+                        }]);
+                    
+                    userName.textContent = currentUser.email.split('@')[0];
+                } else {
+                    userName.textContent = profile.display_name || profile.email?.split('@')[0] || 'Creator';
+                }
+
+                // Load projects
+                await loadProjects();
+                
+                // Load sessions and calculate stats
+                await loadSessionsAndStats();
+                
+                // Load recent activity
+                await loadRecentActivity();
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        async function loadProjects() {
+            try {
+                const { data: projects, error } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                userProjects = projects || [];
+                renderProjects();
+                
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                userProjects = [];
+                renderProjects();
+            }
+        }
+
+        async function loadSessionsAndStats() {
+            try {
+                const { data: sessions, error } = await supabase
+                    .from('sessions')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                userSessions = sessions || [];
+                calculateAndRenderStats();
+                
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                userSessions = [];
+                calculateAndRenderStats();
+            }
+        }
+
+        function calculateAndRenderStats() {
+            const totalSessions = userSessions.length;
+            const publishedPieces = userSessions.filter(s => s.is_published).length;
+            
+            // Calculate total time invested
+            let totalMinutes = 0;
+            userSessions.forEach(session => {
+                if (session.started_at && session.ended_at) {
+                    const start = new Date(session.started_at);
+                    const end = new Date(session.ended_at);
+                    totalMinutes += Math.max(0, (end - start) / (1000 * 60));
+                }
+            });
+            
+            const totalHours = Math.round(totalMinutes / 60);
+            const timeInvested = totalHours > 0 ? `${totalHours}h` : '0h';
+            
+            // Reader views placeholder (would come from analytics)
+            const readerViews = publishedPieces * 50; // Rough estimate
+
+            // Update DOM
+            document.getElementById('totalSessions').textContent = totalSessions;
+            document.getElementById('publishedPieces').textContent = publishedPieces;
+            document.getElementById('timeInvested').textContent = timeInvested;
+            document.getElementById('readerViews').textContent = readerViews > 1000 ? `${(readerViews/1000).toFixed(1)}k` : readerViews;
+        }
+
+        function renderProjects() {
+            const projectsList = document.getElementById('projectsList');
+            
+            if (userProjects.length === 0) {
+                projectsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <h3>No projects yet</h3>
+                        <p>Create your first project to start building your creative portfolio</p>
+                        <button onclick="showNewProjectModal()" class="btn-primary" style="margin-top: 16px;">Create Your First Project</button>
+                    </div>
+                `;
+                return;
+            }
+
+            projectsList.innerHTML = userProjects.map(project => {
+                // Get sessions for this project
+                const projectSessions = userSessions.filter(s => s.project_id === project.id);
+                const publishedSessions = projectSessions.filter(s => s.is_published);
+                
+                // Calculate total time for project
+                let projectMinutes = 0;
+                projectSessions.forEach(session => {
+                    if (session.started_at && session.ended_at) {
+                        const start = new Date(session.started_at);
+                        const end = new Date(session.ended_at);
+                        projectMinutes += Math.max(0, (end - start) / (1000 * 60));
+                    }
+                });
+                const projectHours = Math.round(projectMinutes / 60);
+                
+                // Determine status
+                const hasRecentActivity = projectSessions.some(s => {
+                    const sessionDate = new Date(s.created_at);
+                    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                    return sessionDate > weekAgo;
+                });
+                
+                const status = hasRecentActivity ? 'active' : publishedSessions.length > 0 ? 'published' : 'draft';
+                const statusClass = `status-${status}`;
+                const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+                
+                // Format dates
+                const createdDate = new Date(project.created_at);
+                const timeAgo = getTimeAgo(createdDate);
+                
+                const lastSession = projectSessions.length > 0 ? 
+                    new Date(Math.max(...projectSessions.map(s => new Date(s.created_at)))) : null;
+                const lastSessionAgo = lastSession ? getTimeAgo(lastSession) : 'No sessions yet';
+
+                return `
+                    <div class="project-item" onclick="selectProject('${project.id}')">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-title">${escapeHtml(project.name)}</div>
+                                <div class="project-meta">
+                                    <span>Started ${timeAgo}</span>
+                                    <span>Last session: ${lastSessionAgo}</span>
+                                </div>
+                            </div>
+                            <div class="status-badge ${statusClass}">${statusText}</div>
+                        </div>
+                        ${project.description ? `<p style="color: var(--ink-light); font-size: 0.9rem; margin: 8px 0;">${escapeHtml(project.description)}</p>` : ''}
+                        <div class="project-stats">
+                            <span class="project-stat">📝 ${projectSessions.length} sessions</span>
+                            <span class="project-stat">📖 ${publishedSessions.length} published</span>
+                            <span class="project-stat">⏱️ ${projectHours}h ${Math.round(projectMinutes % 60)}m total</span>
+                            <span class="project-stat">👥 ${publishedSessions.length * 45} reader views</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadRecentActivity() {
+            const recentActivity = document.getElementById('recentActivity');
+            
+            // Get recent sessions for activity
+            const recentSessions = userSessions
+                .slice(0, 5)
+                .map(session => {
+                    const project = userProjects.find(p => p.id === session.project_id);
+                    const timeAgo = getTimeAgo(new Date(session.created_at));
+                    
+                    return {
+                        icon: session.is_published ? '🌐' : '✍️',
+                        action: session.is_published ? 
+                            `Published "${session.intention || 'session'}"` : 
+                            `Completed "${session.intention || 'writing session'}"`,
+                        time: timeAgo,
+                        projectName: project?.name || 'Unknown Project'
+                    };
+                });
+
+            if (recentSessions.length === 0) {
+                recentActivity.innerHTML = `
+                    <div style="text-align: center; padding: 24px; color: var(--ink-light);">
+                        <p>No recent activity</p>
+                        <p style="font-size: 0.9rem; margin-top: 8px;">Start your first session to see your creative journey here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            recentActivity.innerHTML = recentSessions.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">${activity.icon}</div>
+                    <div class="activity-content">
+                        <div class="activity-action">${activity.action}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectProject(projectId) {
+            // Store selected project and navigate to sessions
+            localStorage.setItem('selectedProjectId', projectId);
+            window.location.href = '/sessions/';
+        }
+
+        function showNewProjectModal() {
+            newProjectModal.style.display = 'flex';
+            document.getElementById('projectName').focus();
+        }
+
+        function hideNewProjectModal() {
+            newProjectModal.style.display = 'none';
+            newProjectForm.reset();
+        }
+
+        async function createProject(name, description) {
+            try {
+                const { data, error } = await supabase
+                    .from('projects')
+                    .insert([{
+                        user_id: currentUser.id,
+                        name: name.trim(),
+                        description: description.trim() || null
+                    }])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                userProjects.unshift(data);
+                renderProjects();
+                hideNewProjectModal();
+                
+                // Auto-select the new project and start a session
+                localStorage.setItem('selectedProjectId', data.id);
+                
+                // Optional: Navigate directly to sessions for the new project
+                if (confirm('Project created! Would you like to start your first session now?')) {
+                    window.location.href = '/sessions/';
+                }
+                
+            } catch (error) {
+                console.error('Error creating project:', error);
+                alert('Error creating project. Please try again.');
+            }
+        }
+
+        async function signOut() {
+            try {
+                await supabase.auth.signOut();
+                window.location.href = '/auth.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+
+        function showLoadingState() {
+            loadingState.style.display = 'flex';
+            authRequired.style.display = 'none';
+            dashboard.style.display = 'none';
+        }
+
+        function showAuthRequired() {
+            loadingState.style.display = 'none';
+            authRequired.style.display = 'flex';
+            dashboard.style.display = 'none';
+        }
+
+        function showDashboard() {
+            loadingState.style.display = 'none';
+            authRequired.style.display = 'none';
+            dashboard.style.display = 'block';
+        }
+
+        // Utility functions
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffWeeks = Math.floor(diffDays / 7);
+            const diffMonths = Math.floor(diffDays / 30);
+
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            if (diffWeeks < 4) return `${diffWeeks}w ago`;
+            if (diffMonths < 12) return `${diffMonths}mo ago`;
+            return date.toLocaleDateString();
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Event listeners
+        newSessionBtn.addEventListener('click', () => {
+            window.location.href = '/sessions/';
+        });
+
+        newProjectBtn.addEventListener('click', showNewProjectModal);
+        cancelProject.addEventListener('click', hideNewProjectModal);
+        signOutBtn.addEventListener('click', signOut);
+
+        newProjectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('projectName').value;
+            const description = document.getElementById('projectDescription').value;
+            
+            if (!name.trim()) {
+                alert('Please enter a project name');
+                return;
+            }
+            
+            createProject(name, description);
+        });
+
+        // Close modal when clicking outside
+        newProjectModal.addEventListener('click', (e) => {
+            if (e.target === newProjectModal) {
+                hideNewProjectModal();
+            }
+        });
+
+        // Handle escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideNewProjectModal();
+            }
+        });
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
